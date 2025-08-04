@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .wrapper{
+            display: flex;
+            width: 40%;
+            margin: auto;
+            flex-direction: column;
+            text-align: left;
+        }
+        header{
+            padding: 40px;
+            background-color:black;
+        }
+        .header-title{
+            font-size: 35px;
+            color: white;
+            margin: 0;
+        }
+        section{
+            padding: 30px;
+            font-size: 17px;
+            text-align: left;
+            direction: ltr;
+        }
+    </style>
+</head>
+<body>
+    <div class="wrapper">
+        <!-- <img src=""/> -->
+        <header>
+            <h1 class="header-title">Password Reset Request</h1>
+        </header>
+        <section>
+            <p>
+                Hi ${sendToEmail},
+            </p>
+            <p>
+                Someone has requested a new password for the following account on RD-Aroma:
+            </p>
+            <p>
+                Username: ${sendToEmail},
+            </p>
+            <p>
+                If you didn't make this request, just ignore this email. If you'd like to proceed:
+            </p>
+            <a href="#">
+                Click here to reset your password
+            </a>
+            <p>
+                Thanks for reading.
+            </p>
+        </section>
+    </div>
+
+</body>
+</html>
