@@ -23,6 +23,7 @@ const ProductsRoutes = require('./src/componets/Products/ProductsRoutes')
 const NotificationsRoutes = require('./src/componets/Notifications/NotificationsRoutes')
 const ContactUsRequestsRoutes = require('./src/componets/ContactUsRequests/ContactUsRequestsRoutes')
 const CoupounsRoutes = require('./src/componets/Coupouns/CoupounsRoutes')
+const SlidersRoutes = require('./src/componets/Sliders/SlidersRoutes')
 const Stripe = require('./src/componets/Stripe/Stripe')
 
 // i18next localiztion
@@ -71,6 +72,7 @@ app.use('/static-pages', StaticPagesRoutes)
 app.use('/user', UserRoutes)
 app.use('/product', ProductsRoutes)
 app.use('/cart', CartRoutes)
+app.use('/slider', SlidersRoutes)
 app.use('/coupouns', CoupounsRoutes)
 // app.use('/notification', NotificationsRoutes);
 app.use('/contact-us', ContactUsRequestsRoutes)

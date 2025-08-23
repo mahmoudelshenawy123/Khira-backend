@@ -26,6 +26,8 @@ function authJwt() {
       { url: /\/settings(.*)/ },
       { url: /\/coupouns(.*)/ },
       { url: /\/stripe(.*)/ },
+      { url: /\/category(.*)/ },
+      { url: /\/slider(.*)/ },
       // { url: /\/user(.*)/ },
       { url: /\/static-pages(.*)/ },
       { url: /\/contact-us(.*)/ },

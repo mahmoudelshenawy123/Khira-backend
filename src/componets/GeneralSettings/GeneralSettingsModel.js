@@ -27,6 +27,10 @@ const GeneralSettingsSchema = mongoose.Schema(
       type: String,
       // required: [true, 'Project Logo Is Required'],
     },
+    product_page_image: {
+      type: String,
+      // required: [true, 'Project Logo Is Required'],
+    },
     project_main_background_color: {
       type: String,
       required: [true, 'Project Main Background Color Is Required'],
@@ -71,6 +75,28 @@ const GeneralSettingsSchema = mongoose.Schema(
     vat_value: {
       type: Number,
       // required:[true,'vat_value is required'],
+    },
+    translation: {
+      en: {
+        homePageUpperText: {
+          type: String,
+          required: [true, 'homePageUpperText English content is required'],
+        },
+        homePageFooterText: {
+          type: String,
+          required: [true, 'homePageFooterText English content is required'],
+        },
+      },
+      ar: {
+        homePageUpperText: {
+          type: String,
+          required: [true, 'homePageUpperText Arabic content is required'],
+        },
+        homePageFooterText: {
+          type: String,
+          required: [true, 'homePageFooterText Arabic content is required'],
+        },
+      },
     },
   },
   {
