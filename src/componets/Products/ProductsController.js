@@ -48,6 +48,8 @@ function ProductModal(product, lang, req) {
     title_en: size?.title?.en,
     title_ar: size?.title?.ar,
     price: size?.price,
+    price_before_discount: size?.price_before_discount,
+    quantity: size?.quantity,
   }))
   const category = {
     id: product?.category_id?._id,
@@ -98,7 +100,9 @@ exports.createProduct = async (req, res) => {
       en: size?.title_en,
       ar: size?.title_ar,
     },
-    price: size?.price,
+    price: Number(size?.price),
+    price_before_discount: Number(size?.price_before_discount),
+    quantity: Number(size?.quantity),
   }))
 
   try {
@@ -163,6 +167,8 @@ exports.updateProduct = async (req, res) => {
       ar: size?.title_ar,
     },
     price: size?.price,
+    price_before_discount: size?.price_before_discount,
+    quantity: size?.quantity,
   }))
   if (images_body) {
     images_body?.forEach((img) => {

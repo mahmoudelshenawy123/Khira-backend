@@ -41,6 +41,14 @@ const ProductsSchema = mongoose.Schema(
           type: Number,
           required: [true, 'Product Size Price Is Required'],
         },
+        price_before_discount: {
+          type: Number,
+          // required: [true, 'Product Size Price Is Required'],
+        },
+        quantity: {
+          type: Number,
+          required: [true, 'Product Size Quantity Is Required'],
+        },
       },
     ],
     category_id: {
