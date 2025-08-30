@@ -1,14 +1,14 @@
 function MergeImageLink(req, imageLink) {
-  const baseUrl = `${req.protocol}://${req.get('host')}/public/uploads/`
+  const baseUrl = `${req.protocol}://${req.get('host')}/api/public/uploads/`
   return `${baseUrl}${imageLink}`
 }
 
 function MergePDfLink(req, pdfLink) {
-  const baseUrl = `${req.protocol}://${req.get('host')}/public/files/`
+  const baseUrl = `${req.protocol}://${req.get('host')}/api/public/files/`
   return `${baseUrl}${pdfLink}`
 }
 function SplitImageLink(req, imageLink) {
-  const baseUrl = `${req.protocol}://${req.get('host')}/public/uploads/`
+  const baseUrl = `${req.protocol}://${req.get('host')}/api/public/uploads/`
 
   return imageLink.split(baseUrl)[1]
 }
