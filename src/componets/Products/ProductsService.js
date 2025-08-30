@@ -156,6 +156,47 @@ exports.GetAllProductsPaginated = async (page, itemPerPage) => {
   }
 }
 
+// exports.UpdateProductSizeQuantity = async (productId, sizeId, quantity) => {
+//   return await Products.updateOne(
+//     { _id: productId, 'sizes.id': sizeId },
+//     { $inc: { 'sizes.$.quantity': -quantity } } // decrement stock
+//   )
+// }
+
+// exports.UpdateProductQuantity = async (productId, quantity) => {
+//   return await Products.updateOne(
+//     { _id: productId },
+//     { $inc: { quantity: -quantity } } // if product has no sizes
+//   )
+// }
+
+exports.UpdateProductSizeQuantity = async (productId, sizeId, quantity) => {
+  return await Products.updateOne(
+    { _id: productId },
+    {
+      $inc: {
+        'sizes.$[elem].quantity': -quantity, // decrement stock safely
+      },
+    },
+    {
+      arrayFilters: [{ 'elem._id': sizeId }], // target the right size
+    }
+  )
+}
+exports.UpdateProductQuantity = async (productId, quantity) => {
+  return await Products.updateOne(
+    { _id: productId },
+    { $inc: { quantity: -quantity } }
+  )
+}
+// exports.UpdateProductSizeQuantity = async (productId, sizeId, quantity) => {
+//   return await Products.updateOne(
+//     { _id: productId, 'sizes.id': sizeId, 'sizes.quantity': { $gte: quantity } },
+//     { $inc: { 'sizes.$[elem].quantity': -quantity } },
+//     { arrayFilters: [{ 'elem.id': sizeId }] }
+//   )
+// }
+
 exports.GetTopRatedProductsPaginated = async (page, itemPerPage) => {
   try {
     let products = await Products.find({})

@@ -27,6 +27,11 @@ const ProductsSchema = mongoose.Schema(
     },
     sizes: [
       {
+        id: {
+          type: String,
+          required: true,
+          default: () => new mongoose.Types.ObjectId().toString(),
+        },
         title: {
           en: {
             type: String,

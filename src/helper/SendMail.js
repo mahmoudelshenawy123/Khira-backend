@@ -3,7 +3,10 @@ var nodemailer = require('nodemailer')
 exports.SendMails = (sendToEmail, subject, html) => {
   var transporter = nodemailer.createTransport({
     host: 'khirastore.com',
-    port: 465,
+    // port: 465,
+    // secure: true, // 👈 for SSL/TLS
+    port: 587,
+    secure: false,
     auth: {
       user: 'support@khirastore.com',
       pass: '123456789',
