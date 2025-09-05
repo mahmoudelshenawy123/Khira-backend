@@ -41,14 +41,26 @@ const { GetProviderById } = require('../Providers/ProviderService')
 const { default: mongoose } = require('mongoose')
 const { AddNotification } = require('../Notifications/NotificationsService')
 const { SendMails } = require('../../helper/SendMail')
-const phantomPath = require('phantomjs-prebuilt').path
+// const phantomPath = require('phantomjs-prebuilt').path
 const {
   GetGeneralSettings,
 } = require('../GeneralSettings/GeneralSettingsService')
 const { DeleteCartItems } = require('../Cart/CartService')
-const pdf = require('html-pdf')
+// const pdf = require('html-pdf')
 const OrderPdf = require('../../Documents/OrderPDF')
 // const pdfTemplate = require('./documents');
+
+const puppeteer = require('puppeteer')
+
+async function generatePdf(html, filePath) {
+  const browser = await puppeteer.launch({
+    args: ['--no-sandbox', '--disable-setuid-sandbox'], // important for GCP/PM2
+  })
+  const page = await browser.newPage()
+  await page.setContent(html, { waitUntil: 'networkidle0' })
+  await page.pdf({ path: filePath, format: 'A4', printBackground: true })
+  await browser.close()
+}
 
 const CREATE_EMAIL_HTML = (pdfLink, userName, orderNumber) => `
 <!DOCTYPE html>
@@ -230,68 +242,112 @@ exports.createOrder = async (req, res) => {
     }
     await DeleteCartItems({ unique_identifier: unique_identifier })
     try {
-      await new Promise((resolve, reject) => {
-        let addedInfo = {
-          totalPrice: addedOrder?.total_price,
-          orderNumber: addedOrder?.item_number,
-          billingAddress: addedOrder?.billing_address,
-          products: addedProducts,
-          subTotal: addedOrder?.sub_total_price,
-          shippingAddress: addedOrder?.shipping_address,
-          created_at: moment(addedOrder?.created_at).format(
-            'MMMM Do YYYY, h:mm:ss a'
-          ),
-        }
-        pdf
-          .create(OrderPdf(addedInfo), { phantomPath })
-          .toFile(
-            `./public/files/Order.No-${addedOrder?.item_number}-invoice.pdf`,
-            (err) => {
-              if (err) console.error(err)
-              resolve()
-            }
-          )
-        // pdf
-        //   .create(OrderPdf(addedInfo), {})
-        //   .toFile(
-        //     `./public/files/Order.No-${addedOrder?.item_number}-invoice.pdf`,
-        //     (err) => {
-        //       if (err) {
-        //         console.log(err)
-        //       }
-        //       resolve()
-        //     }
-        //   )
+      let addedInfo = {
+        totalPrice: addedOrder?.total_price,
+        orderNumber: addedOrder?.item_number,
+        billingAddress: addedOrder?.billing_address,
+        products: addedProducts,
+        subTotal: addedOrder?.sub_total_price,
+        shippingAddress: addedOrder?.shipping_address,
+        created_at: moment(addedOrder?.created_at).format(
+          'MMMM Do YYYY, h:mm:ss a'
+        ),
+      }
+      await generatePdf(
+        OrderPdf(addedInfo),
+        `./public/files/Order.No-${addedOrder?.item_number}-invoice.pdf`
+      )
 
-        if (billing_address_email) {
-          SendMails(
-            billing_address_email,
-            `Order #${addedOrder?.item_number} Created Successfully`,
-            CREATE_EMAIL_HTML(
-              MergePDfLink(
-                req,
-                `Order.No-${addedOrder?.item_number}-invoice.pdf`
-              ),
-              addedOrder?.billing_address?.name,
-              addedOrder?.item_number
-            )
+      if (billing_address_email) {
+        SendMails(
+          billing_address_email,
+          `Order #${addedOrder?.item_number} Created Successfully`,
+          CREATE_EMAIL_HTML(
+            MergePDfLink(
+              req,
+              `Order.No-${addedOrder?.item_number}-invoice.pdf`
+            ),
+            addedOrder?.billing_address?.name,
+            addedOrder?.item_number
           )
-        }
-        if (generalSetting?.project_email_address) {
-          SendMails(
-            generalSetting?.project_email_address,
-            `Order #${addedOrder?.item_number} Created Successfully`,
-            CREATE_EMAIL_HTML(
-              MergePDfLink(
-                req,
-                `Order.No-${addedOrder?.item_number}-invoice.pdf`
-              ),
-              'Admin',
-              addedOrder?.item_number
-            )
+        )
+      }
+      if (generalSetting?.project_email_address) {
+        SendMails(
+          generalSetting?.project_email_address,
+          `Order #${addedOrder?.item_number} Created Successfully`,
+          CREATE_EMAIL_HTML(
+            MergePDfLink(
+              req,
+              `Order.No-${addedOrder?.item_number}-invoice.pdf`
+            ),
+            'Admin',
+            addedOrder?.item_number
           )
-        }
-      })
+        )
+      }
+      //   await new Promise((resolve, reject) => {
+      //     // let addedInfo = {
+      //     //   totalPrice: addedOrder?.total_price,
+      //     //   orderNumber: addedOrder?.item_number,
+      //     //   billingAddress: addedOrder?.billing_address,
+      //     //   products: addedProducts,
+      //     //   subTotal: addedOrder?.sub_total_price,
+      //     //   shippingAddress: addedOrder?.shipping_address,
+      //     //   created_at: moment(addedOrder?.created_at).format(
+      //     //     'MMMM Do YYYY, h:mm:ss a'
+      //     //   ),
+      //     // }
+      //     // pdf
+      //     //   .create(OrderPdf(addedInfo), { phantomPath })
+      //     //   .toFile(
+      //     //     `./public/files/Order.No-${addedOrder?.item_number}-invoice.pdf`,
+      //     //     (err) => {
+      //     //       if (err) console.error(err)
+      //     //       resolve()
+      //     //     }
+      //     //   )
+      //     // pdf
+      //     //   .create(OrderPdf(addedInfo), {})
+      //     //   .toFile(
+      //     //     `./public/files/Order.No-${addedOrder?.item_number}-invoice.pdf`,
+      //     //     (err) => {
+      //     //       if (err) {
+      //     //         console.log(err)
+      //     //       }
+      //     //       resolve()
+      //     //     }
+      //     //   )
+
+      //     if (billing_address_email) {
+      //       SendMails(
+      //         billing_address_email,
+      //         `Order #${addedOrder?.item_number} Created Successfully`,
+      //         CREATE_EMAIL_HTML(
+      //           MergePDfLink(
+      //             req,
+      //             `Order.No-${addedOrder?.item_number}-invoice.pdf`
+      //           ),
+      //           addedOrder?.billing_address?.name,
+      //           addedOrder?.item_number
+      //         )
+      //       )
+      //     }
+      //     if (generalSetting?.project_email_address) {
+      //       SendMails(
+      //         generalSetting?.project_email_address,
+      //         `Order #${addedOrder?.item_number} Created Successfully`,
+      //         CREATE_EMAIL_HTML(
+      //           MergePDfLink(
+      //             req,
+      //             `Order.No-${addedOrder?.item_number}-invoice.pdf`
+      //           ),
+      //           'Admin',
+      //           addedOrder?.item_number
+      //         )
+      //       )
+      //     }
+      //   })
     } catch (error) {
       console.log(error)
     }
