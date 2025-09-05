@@ -111,7 +111,7 @@ const CREATE_EMAIL_HTML = (pdfLink, userName, orderNumber) => `
                     Hi ,${userName}
                 </p>
                 <p>
-                  Thanks for creating an Order on RD-Aroma. Your username is .We Will Review It And Contact You
+                  Thanks for creating an Order on Khira-Store.We Will Review It And Contact You
                 </p>
                 <a href='${pdfLink}'>
                   Click here to see your Invoice.
