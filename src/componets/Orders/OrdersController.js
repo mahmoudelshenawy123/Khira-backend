@@ -41,6 +41,7 @@ const { GetProviderById } = require('../Providers/ProviderService')
 const { default: mongoose } = require('mongoose')
 const { AddNotification } = require('../Notifications/NotificationsService')
 const { SendMails } = require('../../helper/SendMail')
+const phantomPath = require('phantomjs-prebuilt').path
 const {
   GetGeneralSettings,
 } = require('../GeneralSettings/GeneralSettingsService')
@@ -241,18 +242,26 @@ exports.createOrder = async (req, res) => {
             'MMMM Do YYYY, h:mm:ss a'
           ),
         }
-
         pdf
-          .create(OrderPdf(addedInfo), {})
+          .create(OrderPdf(addedInfo), { phantomPath })
           .toFile(
             `./public/files/Order.No-${addedOrder?.item_number}-invoice.pdf`,
             (err) => {
-              if (err) {
-                console.log(err)
-              }
+              if (err) console.error(err)
               resolve()
             }
           )
+        // pdf
+        //   .create(OrderPdf(addedInfo), {})
+        //   .toFile(
+        //     `./public/files/Order.No-${addedOrder?.item_number}-invoice.pdf`,
+        //     (err) => {
+        //       if (err) {
+        //         console.log(err)
+        //       }
+        //       resolve()
+        //     }
+        //   )
 
         if (billing_address_email) {
           SendMails(

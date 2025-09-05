@@ -1,15 +1,24 @@
-module.exports = ({totalPrice,orderNumber,billingAddress,products,subTotal,shippingAddress,created_at}) => {
-    const today = new Date();
-   
-   let prodcutTableHtml = `<table>`
-   products && products.forEach(product=>{
+module.exports = ({
+  totalPrice,
+  orderNumber,
+  billingAddress,
+  products,
+  subTotal,
+  shippingAddress,
+  created_at,
+}) => {
+  const today = new Date()
+
+  let prodcutTableHtml = `<table>`
+  products &&
+    products.forEach((product) => {
       prodcutTableHtml += `<tr class='item'>
          <td>${product?.product_title} X ${product?.quantity}</td>
-         <td>${product?.buying_price} AED</td>
+         <td>${product?.buying_price} EGP</td>
       </tr>`
     })
-    prodcutTableHtml +=`</table>`
-return `
+  prodcutTableHtml += `</table>`
+  return `
     <!doctype html>
     <html>
        <head>
@@ -99,7 +108,7 @@ return `
                   <td colspan="2">
                      <table>
                         <tr>
-                           <td class='header-title'>RD.Aroma</td>
+                           <td class='header-title'>Khira-Store</td>
                            <td>
                               Date : ${created_at}
                            </td>
@@ -129,24 +138,56 @@ return `
                      <table>
                         <tr>
                         ${
-                           billingAddress&&
-                           `<td>
+                          billingAddress &&
+                          `<td>
                               <p class='header-title'>Billing Address:</p>
                               
-                              <p>Name : ${billingAddress?.name?billingAddress?.name:'---'}</p>
-                              <p>City : ${billingAddress?.city?billingAddress?.city:'---'}</p>
-                              <p>Street Address : ${billingAddress?.street_address?billingAddress?.street_address:'---'}</p>
-                              <p>Email : ${billingAddress?.email?billingAddress?.email:'---'}</p>
+                              <p>Name : ${
+                                billingAddress?.name
+                                  ? billingAddress?.name
+                                  : '---'
+                              }</p>
+                              <p>City : ${
+                                billingAddress?.city
+                                  ? billingAddress?.city
+                                  : '---'
+                              }</p>
+                              <p>Street Address : ${
+                                billingAddress?.street_address
+                                  ? billingAddress?.street_address
+                                  : '---'
+                              }</p>
+                              <p>Email : ${
+                                billingAddress?.email
+                                  ? billingAddress?.email
+                                  : '---'
+                              }</p>
                            </td>`
                         }
                         ${
-                           shippingAddress&&
-                           `<td>
+                          shippingAddress &&
+                          `<td>
                               <p class='header-title'>Shipping Address:</p>
-                              <p>Name : ${shippingAddress?.name!='undefined'?shippingAddress?.name:'---'}</p>
-                              <p>City : ${shippingAddress?.city!='undefined'?shippingAddress?.city:'---'}</p>
-                              <p>Street Address : ${shippingAddress?.street_address!='undefined'?shippingAddress?.street_address:'---'}</p>
-                              <p>State : ${shippingAddress?.state!='undefined'?shippingAddress?.state:'---'}</p>
+                              <p>Name : ${
+                                shippingAddress?.name != 'undefined'
+                                  ? shippingAddress?.name
+                                  : '---'
+                              }</p>
+                              <p>City : ${
+                                shippingAddress?.city != 'undefined'
+                                  ? shippingAddress?.city
+                                  : '---'
+                              }</p>
+                              <p>Street Address : ${
+                                shippingAddress?.street_address != 'undefined'
+                                  ? shippingAddress?.street_address
+                                  : '---'
+                              }</p>
+                              <p>State : ${
+                                shippingAddress?.state != 'undefined'
+                                  ? shippingAddress?.state
+                                  : '---'
+                              }</p>
                            </td>`
                         }
                         </tr>
@@ -155,15 +196,15 @@ return `
                </tr>
                <tr class="heading">
                   <td>Bought Products:</td>
-                  <td>Price : ${subTotal} AED</td>
+                  <td>Price : ${subTotal} EGP</td>
                </tr>
             </table>
             ${prodcutTableHtml}
             <br />
-            <h1 class="justify-center">Total price: ${totalPrice} AED</h1>
+            <h1 class="justify-center">Total price: ${totalPrice} EGP</h1>
          </div>
          
       </body>
    </html>
-    `;
-};
+    `
+}
