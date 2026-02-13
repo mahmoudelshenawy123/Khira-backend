@@ -28,6 +28,7 @@ exports.updateSettings = async (req, res) => {
     vat_value,
     project_logo: project_logo_body,
 
+    shipping_prices,
     // new translation fields
     homePageUpperText_en,
     homePageFooterText_en,
@@ -52,7 +53,7 @@ exports.updateSettings = async (req, res) => {
       : req.body.product_page_image
       ? SplitImageLink(req, req.body.product_page_image)
       : '',
-
+    shipping_prices: shipping_prices ? JSON.parse(shipping_prices) : {},
     is_project_In_factory_mode,
     is_online_payment_active,
     is_cash_payment_active,
@@ -123,6 +124,7 @@ exports.getSettings = async (req, res) => {
       shipping_chargers: generalSetting?.shipping_chargers,
       wrap_as_gift_value: generalSetting?.wrap_as_gift_value,
       vat_value: generalSetting?.vat_value,
+      shipping_prices: generalSetting?.shipping_prices || {},
 
       // translated values
       homePageUpperText:

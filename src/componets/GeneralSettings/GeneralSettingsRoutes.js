@@ -3,6 +3,7 @@ const express = require('express')
 const router = express.Router()
 const multer = require('multer')
 const { updateSettings, getSettings } = require('./GeneralSettingsController')
+const cache = require('../../middleware/ResponseCache')
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -30,8 +31,13 @@ function uploadModififed(req, res, next) {
   })
 }
 
-router.put('/update-settings', uploadModififed, updateSettings)
+router.put(
+  '/update-settings',
+  cache.deleteCache(),
+  uploadModififed,
+  updateSettings
+)
 
-router.get('/', getSettings)
+router.get('/', cache(3000000), getSettings)
 
 module.exports = router

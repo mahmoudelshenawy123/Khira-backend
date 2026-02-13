@@ -68,6 +68,11 @@ const GeneralSettingsSchema = mongoose.Schema(
       type: Number,
       // required:[true,'additional_milage is required'],
     },
+    shipping_prices: {
+      type: Map,
+      of: Number, // Cairo: 50, Giza: 40
+      default: {},
+    },
     wrap_as_gift_value: {
       type: Number,
       // required:[true,'additional_milage is required'],
